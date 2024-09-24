@@ -53,11 +53,16 @@ class Game:
                     explosionSound = mixer.Sound(load_sound("explosion.wav")) 
                     explosionSound.play()
 
-                if enemy.rect.colliderect(self.player.rect):
+                shrink_factor = 0.5  # Porcentaje para reducir el rectángulo 
+                reduced_enemy_rect = enemy.rect.inflate(-enemy.rect.width * (1 - shrink_factor), -enemy.rect.height * (1 - shrink_factor))
+                reduced_player_rect = self.player.rect.inflate(-self.player.rect.width * (1 - shrink_factor), -self.player.rect.height * (1 - shrink_factor))
+
+                # Verificar colisión con los rectángulos reducidos
+                if reduced_enemy_rect.colliderect(reduced_player_rect):
                     self.game_over = True
                     gameOverSound = mixer.Sound(load_sound("gameover.wav"))
                     gameOverSound.play()
-
+                    
                 # Si el enemigo llega al fondo, termina el juego
                 if enemy.rect.y > SCREEN_HEIGHT - 160:
                     self.game_over = True
