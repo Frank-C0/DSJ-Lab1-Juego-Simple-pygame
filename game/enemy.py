@@ -11,7 +11,7 @@ class Enemy:
 
     def reset(self):
         self.rect.x = random.randint(0, SCREEN_WIDTH - self.rect.width)
-        self.rect.y = random.randint(50, 150)
+        self.rect.y = random.randint(0, 30)
         self.speed = ENEMY_SPEED * random.choice([-1, 1])
 
     def update(self):

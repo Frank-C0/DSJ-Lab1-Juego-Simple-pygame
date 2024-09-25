@@ -1,11 +1,12 @@
-# game/game.py
 import pygame
 from pygame import mixer
 from config import *
 from game.player import Player
 from game.enemy import Enemy
 from game.bullet import Bullet
+from game.rock import Rock 
 from utils.asset_loader import load_image, load_sound
+import random
 
 class Game:
     def __init__(self):
@@ -24,7 +25,8 @@ class Game:
         self.player = Player(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 120)
         self.enemies = [Enemy() for _ in range(NUM_ENEMIES)]
         self.bullet = Bullet()
-        
+        self.rocks = [Rock(self.player) for _ in range(2)]
+
         self.score = 0
         self.game_over = False
 
@@ -64,14 +66,29 @@ class Game:
                     gameOverSound.play()
                     
                 # Si el enemigo llega al fondo, termina el juego
-                if enemy.rect.y > SCREEN_HEIGHT - 160:
+                if enemy.rect.y > SCREEN_HEIGHT - 20:
                     self.game_over = True
+
+            # Actualizar rocas
+            for rock in self.rocks:
+                rock.update(self.player)
+
+                # Verificar colisión entre el jugador y la roca
+                if rock.check_collision(self.player):
+                    self.game_over = True
+                    gameOverSound = mixer.Sound(load_sound("gameover.wav"))
+                    gameOverSound.play()
 
     def draw(self):
         self.screen.blit(self.background, (0, 0))
+
+        pygame.draw.line(self.screen, (255, 0, 0), (0, SCREEN_HEIGHT - 20), (SCREEN_WIDTH, SCREEN_HEIGHT - 20), 4)
+
         self.player.draw(self.screen)
         for enemy in self.enemies:
             enemy.draw(self.screen)
+        for rock in self.rocks:
+            rock.draw(self.screen)
         self.bullet.draw(self.screen)
         self.draw_score()
         if self.game_over:
