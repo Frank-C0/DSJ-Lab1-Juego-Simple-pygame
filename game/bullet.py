@@ -17,7 +17,7 @@ class Bullet:
 
     def handle_event(self, event, player):
         mouse_pos = pygame.mouse.get_pos()
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.state == "ready":
+        if (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and self.state == "ready") or (event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.state == "ready"):
             self.state = "fire"
 
             self.direction = pygame.Vector2(mouse_pos) - pygame.Vector2(player.rect.center)
